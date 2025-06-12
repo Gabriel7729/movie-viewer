@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useActor } from '@/services/hooks';
 import { apiService } from '@/services/api';
 import { Movie } from '@/types';
@@ -79,7 +80,7 @@ export default function ActorDetailPage() {
       <div className="flex flex-col items-center justify-center h-64">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Actor not found</h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          The actor you're looking for doesn't exist or has been removed.
+          The actor you&apos;re looking for doesn&apos;t exist or has been removed.
         </p>
         <Button onClick={() => router.push('/actors')}>Go Back to Actors</Button>
       </div>
@@ -103,13 +104,22 @@ export default function ActorDetailPage() {
         {/* Actor Photo */}
         <div className="lg:col-span-1">
           <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-lg">
-            <img 
+            <Image 
               src={actor.photo} 
               alt={actor.name} 
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = 'https://via.placeholder.com/500x750?text=No+Image';
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+              onError={() => {
+                // Handle error by replacing with a placeholder image
+                const imgElement = document.createElement('img');
+                imgElement.src = 'https://via.placeholder.com/500x750?text=No+Image';
+                imgElement.alt = actor.name;
+                imgElement.className = 'absolute inset-0 w-full h-full object-cover';
+                const parent = document.querySelector(`[alt="${actor.name}"]`)?.parentElement;
+                if (parent) {
+                  parent.appendChild(imgElement);
+                }
               }}
             />
           </div>
@@ -161,13 +171,22 @@ export default function ActorDetailPage() {
                     <Card className="h-full transition-transform hover:scale-105 hover:shadow-lg cursor-pointer">
                       <div className="flex">
                         <div className="relative w-1/3 aspect-[2/3]">
-                          <img
+                          <Image
                             src={movie.poster}
                             alt={movie.title}
-                            className="absolute top-0 left-0 w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.onerror = null;
-                              e.currentTarget.src = 'https://via.placeholder.com/300x450?text=No+Poster';
+                            fill
+                            sizes="(max-width: 768px) 33vw, (max-width: 1200px) 25vw, 20vw"
+                            className="object-cover"
+                            onError={() => {
+                              // Handle error by replacing with a placeholder image
+                              const imgElement = document.createElement('img');
+                              imgElement.src = 'https://via.placeholder.com/300x450?text=No+Poster';
+                              imgElement.alt = movie.title;
+                              imgElement.className = 'absolute inset-0 w-full h-full object-cover';
+                              const parent = document.querySelector(`[alt="${movie.title}"]`)?.parentElement;
+                              if (parent) {
+                                parent.appendChild(imgElement);
+                              }
                             }}
                           />
                         </div>

@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { scaleUp, hoverScale } from '@/utils/animation';
 
 interface CardProps {
@@ -54,18 +55,31 @@ interface CardImageProps {
 export function CardImage({ src, alt, className = '' }: CardImageProps) {
   return (
     <div className={`relative w-full aspect-[2/3] ${className}`}>
-      <motion.img 
-        src={src} 
-        alt={alt} 
-        className="absolute top-0 left-0 w-full h-full object-cover"
+      <motion.div
+        className="absolute inset-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        onError={(e) => {
-          e.currentTarget.onerror = null;
-          e.currentTarget.src = 'https://via.placeholder.com/300x450?text=No+Image';
-        }}
-      />
+      >
+        <Image 
+          src={src} 
+          alt={alt} 
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover"
+          onError={() => {
+            // Next/image doesn't support onError the same way, we'll handle fallbacks differently
+            const imgElement = document.createElement('img');
+            imgElement.src = 'https://via.placeholder.com/300x450?text=No+Image';
+            imgElement.alt = alt;
+            imgElement.className = 'absolute inset-0 w-full h-full object-cover';
+            const parent = document.querySelector(`[alt="${alt}"]`)?.parentElement;
+            if (parent) {
+              parent.appendChild(imgElement);
+            }
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

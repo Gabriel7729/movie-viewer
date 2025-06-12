@@ -24,24 +24,33 @@ export default function ParallaxScroll({
   });
 
   // Calculate transform values based on direction
-  const getTransformValues = () => {
-    const distance = 100 * speed;
-    
-    switch(direction) {
-      case "up":
-        return useTransform(scrollYProgress, [0, 1], [`0px`, `-${distance}px`]);
-      case "down":
-        return useTransform(scrollYProgress, [0, 1], [`0px`, `${distance}px`]);
-      case "left":
-        return useTransform(scrollYProgress, [0, 1], [`0px`, `-${distance}px`]);
-      case "right":
-        return useTransform(scrollYProgress, [0, 1], [`0px`, `${distance}px`]);
-      default:
-        return useTransform(scrollYProgress, [0, 1], [`0px`, `-${distance}px`]);
-    }
-  };
+  const distance = 100 * speed;
+  
+  // Create transform values directly with hooks
+  const upTransform = useTransform(scrollYProgress, [0, 1], [`0px`, `-${distance}px`]);
+  const downTransform = useTransform(scrollYProgress, [0, 1], [`0px`, `${distance}px`]);
+  const leftTransform = useTransform(scrollYProgress, [0, 1], [`0px`, `-${distance}px`]);
+  const rightTransform = useTransform(scrollYProgress, [0, 1], [`0px`, `${distance}px`]);
+  
+  // Select the appropriate transform based on direction
+  let transformValue;
+  switch(direction) {
+    case "up":
+      transformValue = upTransform;
+      break;
+    case "down":
+      transformValue = downTransform;
+      break;
+    case "left":
+      transformValue = leftTransform;
+      break;
+    case "right":
+      transformValue = rightTransform;
+      break;
+    default:
+      transformValue = upTransform;
+  }
 
-  const transformValue = getTransformValues();
   const isHorizontal = direction === "left" || direction === "right";
   
   const x = isHorizontal ? transformValue : 0;

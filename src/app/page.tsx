@@ -1,22 +1,14 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import Button from '@/components/ui/Button';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { fadeIn, slideUp, slideInLeft, slideInRight, staggerContainer, scaleUp } from '@/utils/animation';
+import { motion } from 'framer-motion';
+import { slideUp, slideInLeft, slideInRight, staggerContainer } from '@/utils/animation';
 import AnimateElement from '@/components/ui/AnimateElement';
 import ParallaxScroll, { ParallaxSection } from '@/components/animation/ParallaxScroll';
-import { useRef } from 'react';
 
 export default function Home() {
-  const targetRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start end", "end start"]
-  });
-  
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
   
   const titleVariants = {
     hidden: { opacity: 0, y: -20 },
@@ -98,11 +90,15 @@ export default function Home() {
                       whileHover={{ scale: 1.05, rotate: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <img 
-                        src="https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy71SPU58RSJu.jpg" 
-                        alt="Inception" 
-                        className="rounded-lg shadow-xl"
-                      />
+                      <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
+                        <Image 
+                          src="https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy71SPU58RSJu.jpg" 
+                          alt="Inception" 
+                          fill
+                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                          className="object-cover"
+                        />
+                      </div>
                     </motion.div>
                   </ParallaxScroll>
                   
@@ -112,11 +108,15 @@ export default function Home() {
                       whileHover={{ scale: 1.05, rotate: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <img 
-                        src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
-                        alt="The Dark Knight" 
-                        className="rounded-lg shadow-xl"
-                      />
+                      <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
+                        <Image 
+                          src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
+                          alt="The Dark Knight" 
+                          fill
+                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                          className="object-cover"
+                        />
+                      </div>
                     </motion.div>
                   </ParallaxScroll>
                 </div>
@@ -193,7 +193,7 @@ export default function Home() {
                 </motion.div>
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Advanced Search</h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Find exactly what you're looking for with our powerful search functionality.
+                  Find exactly what you&apos;re looking for with our powerful search functionality.
                 </p>
               </div>
             </AnimateElement>
@@ -222,13 +222,22 @@ export default function Home() {
             <AnimateElement delay={0.1}>
               <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                  <motion.img 
-                    src="https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy71SPU58RSJu.jpg" 
-                    alt="Inception" 
-                    className="w-full h-64 object-cover"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  <div className="relative w-full h-64">
+                    <Image 
+                      src="https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy71SPU58RSJu.jpg" 
+                      alt="Inception" 
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                      style={{ transform: 'scale(1.05)' }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                    />
+                  </div>
                   <div className="p-4">
                     <motion.h3 
                       className="text-xl font-bold text-gray-800 dark:text-white mb-2"
@@ -255,13 +264,22 @@ export default function Home() {
             <AnimateElement delay={0.2}>
               <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                  <motion.img 
-                    src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" 
-                    alt="The Shawshank Redemption" 
-                    className="w-full h-64 object-cover"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  <div className="relative w-full h-64">
+                    <Image 
+                      src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" 
+                      alt="The Shawshank Redemption" 
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                      style={{ transform: 'scale(1.05)' }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                    />
+                  </div>
                   <div className="p-4">
                     <motion.h3 
                       className="text-xl font-bold text-gray-800 dark:text-white mb-2"
@@ -288,13 +306,22 @@ export default function Home() {
             <AnimateElement delay={0.3}>
               <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                  <motion.img 
-                    src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
-                    alt="The Dark Knight" 
-                    className="w-full h-64 object-cover"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  <div className="relative w-full h-64">
+                    <Image 
+                      src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
+                      alt="The Dark Knight" 
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                      style={{ transform: 'scale(1.05)' }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                    />
+                  </div>
                   <div className="p-4">
                     <motion.h3 
                       className="text-xl font-bold text-gray-800 dark:text-white mb-2"

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useMovie } from '@/services/hooks';
 import { apiService } from '@/services/api';
 import { Actor } from '@/types';
@@ -58,7 +59,7 @@ export default function MovieDetailPage() {
       <div className="flex flex-col items-center justify-center h-64">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Movie not found</h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          The movie you're looking for doesn't exist or has been removed.
+          The movie you&apos;re looking for doesn&apos;t exist or has been removed.
         </p>
         <Button onClick={() => router.push('/movies')}>Go Back to Movies</Button>
       </div>
@@ -82,13 +83,22 @@ export default function MovieDetailPage() {
         {/* Movie Poster */}
         <div className="lg:col-span-1">
           <div className="relative aspect-[2/3] rounded-lg overflow-hidden shadow-lg">
-            <img 
+            <Image 
               src={movie.poster} 
               alt={movie.title} 
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = 'https://via.placeholder.com/500x750?text=No+Image';
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+              onError={() => {
+                // Handle error by replacing with a placeholder image
+                const imgElement = document.createElement('img');
+                imgElement.src = 'https://via.placeholder.com/500x750?text=No+Image';
+                imgElement.alt = movie.title;
+                imgElement.className = 'absolute inset-0 w-full h-full object-cover';
+                const parent = document.querySelector(`[alt="${movie.title}"]`)?.parentElement;
+                if (parent) {
+                  parent.appendChild(imgElement);
+                }
               }}
             />
           </div>
@@ -149,13 +159,22 @@ export default function MovieDetailPage() {
                   <Link href={`/actors/${actor.id}`} key={actor.id}>
                     <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow overflow-hidden transition-transform hover:scale-105 cursor-pointer">
                       <div className="relative w-full aspect-[3/4]">
-                        <img
+                        <Image
                           src={actor.photo}
                           alt={actor.name}
-                          className="absolute top-0 left-0 w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = 'https://via.placeholder.com/300x400?text=No+Photo';
+                          fill
+                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                          className="object-cover"
+                          onError={() => {
+                            // Handle error by replacing with a placeholder image
+                            const imgElement = document.createElement('img');
+                            imgElement.src = 'https://via.placeholder.com/300x400?text=No+Photo';
+                            imgElement.alt = actor.name;
+                            imgElement.className = 'absolute inset-0 w-full h-full object-cover';
+                            const parent = document.querySelector(`[alt="${actor.name}"]`)?.parentElement;
+                            if (parent) {
+                              parent.appendChild(imgElement);
+                            }
                           }}
                         />
                       </div>
