@@ -13,8 +13,8 @@ export default function Footer() {
   };
   
   return (
-    <footer className="bg-white border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <footer className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border-t border-gray-200 dark:border-gray-700/50 section-texture">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div 
           className="md:flex md:justify-between"
           variants={staggerContainer}
@@ -23,7 +23,7 @@ export default function Footer() {
           viewport={{ once: true, amount: 0.1 }}
         >
           <motion.div 
-            className="mb-6 md:mb-0"
+            className="mb-8 md:mb-0 md:w-1/3"
             variants={itemVariants}
           >
             <Link href="/" className="flex items-center">
@@ -33,59 +33,96 @@ export default function Footer() {
                 viewBox="0 0 24 24" 
                 strokeWidth={1.5} 
                 stroke="currentColor" 
-                className="w-8 h-8 text-blue-600"
+                className="w-8 h-8 text-primary"
                 whileHover={{ scale: 1.2, rotate: 15 }}
                 transition={{ duration: 0.3 }}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0 1 18 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 4.996 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 4.996 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0 1 18 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-2.625-2.625c0 .621.504 1.125 1.125 1.125h1.5m-1.5 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-12.75 0v.75m12.75-3v.75m-12.75 0c.621 0 1.125.504 1.125 1.125v.75m-1.125 0c-.621 0-1.125-.504-1.125-1.125v-.75m0 0c0-.621.504-1.125 1.125-1.125h12.75c.621 0 1.125.504 1.125 1.125v.75c0 .621-.504 1.125-1.125 1.125H4.875c-.621 0-1.125-.504-1.125-1.125v-.75Z" />
               </motion.svg>
-              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">MovieViewer</span>
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">MovieViewer</span>
             </Link>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              Explore movies and discover actors in our comprehensive database.
+            <p className="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+              Explore movies and discover actors in our comprehensive database. Get detailed information, ratings, and reviews for thousands of titles.
             </p>
+            <div className="mt-6">
+              <motion.div 
+                className="bg-gray-100/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg p-4 border border-gray-200/50 dark:border-gray-600/50"
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.2 }}
+              >
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Subscribe to our newsletter</p>
+                <div className="mt-3 flex">
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    className="flex-1 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-l-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <button className="bg-gradient-to-r from-primary to-accent text-white px-4 py-2 rounded-r-md text-sm font-medium hover:opacity-90 transition-opacity">
+                    Join
+                  </button>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
           
-          <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-8 sm:gap-10 sm:grid-cols-3">
             <motion.div variants={itemVariants}>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Navigation</h2>
-              <ul className="text-gray-600 dark:text-gray-400">
-                <motion.li className="mb-4" variants={itemVariants}>
-                  <Link href="/movies" className="hover:underline">Movies</Link>
+              <h2 className="mb-6 text-sm font-semibold uppercase bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Navigation</h2>
+              <ul className="text-gray-600 dark:text-gray-400 space-y-3">
+                <motion.li variants={itemVariants}>
+                  <Link href="/movies" className="hover:text-primary dark:hover:text-primary-light transition-colors">Movies</Link>
                 </motion.li>
                 <motion.li variants={itemVariants}>
-                  <Link href="/actors" className="hover:underline">Actors</Link>
+                  <Link href="/actors" className="hover:text-primary dark:hover:text-primary-light transition-colors">Actors</Link>
+                </motion.li>
+                <motion.li variants={itemVariants}>
+                  <Link href="/genres" className="hover:text-primary dark:hover:text-primary-light transition-colors">Genres</Link>
+                </motion.li>
+                <motion.li variants={itemVariants}>
+                  <Link href="/upcoming" className="hover:text-primary dark:hover:text-primary-light transition-colors">Upcoming</Link>
                 </motion.li>
               </ul>
             </motion.div>
             
             <motion.div variants={itemVariants}>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Account</h2>
-              <ul className="text-gray-600 dark:text-gray-400">
-                <motion.li className="mb-4" variants={itemVariants}>
-                  <Link href="/auth/login" className="hover:underline">Sign In</Link>
+              <h2 className="mb-6 text-sm font-semibold uppercase bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Account</h2>
+              <ul className="text-gray-600 dark:text-gray-400 space-y-3">
+                <motion.li variants={itemVariants}>
+                  <Link href="/auth/login" className="hover:text-primary dark:hover:text-primary-light transition-colors">Sign In</Link>
                 </motion.li>
                 <motion.li variants={itemVariants}>
-                  <Link href="/auth/register" className="hover:underline">Sign Up</Link>
+                  <Link href="/auth/register" className="hover:text-primary dark:hover:text-primary-light transition-colors">Sign Up</Link>
+                </motion.li>
+                <motion.li variants={itemVariants}>
+                  <Link href="/profile" className="hover:text-primary dark:hover:text-primary-light transition-colors">My Profile</Link>
+                </motion.li>
+                <motion.li variants={itemVariants}>
+                  <Link href="/watchlist" className="hover:text-primary dark:hover:text-primary-light transition-colors">My Watchlist</Link>
                 </motion.li>
               </ul>
             </motion.div>
             
             <motion.div variants={itemVariants}>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
-              <ul className="text-gray-600 dark:text-gray-400">
-                <motion.li className="mb-4" variants={itemVariants}>
-                  <Link href="#" className="hover:underline">Privacy Policy</Link>
+              <h2 className="mb-6 text-sm font-semibold uppercase bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Support</h2>
+              <ul className="text-gray-600 dark:text-gray-400 space-y-3">
+                <motion.li variants={itemVariants}>
+                  <Link href="/faq" className="hover:text-primary dark:hover:text-primary-light transition-colors">FAQ</Link>
                 </motion.li>
                 <motion.li variants={itemVariants}>
-                  <Link href="#" className="hover:underline">Terms &amp; Conditions</Link>
+                  <Link href="/contact" className="hover:text-primary dark:hover:text-primary-light transition-colors">Contact Us</Link>
+                </motion.li>
+                <motion.li variants={itemVariants}>
+                  <Link href="/privacy" className="hover:text-primary dark:hover:text-primary-light transition-colors">Privacy Policy</Link>
+                </motion.li>
+                <motion.li variants={itemVariants}>
+                  <Link href="/terms" className="hover:text-primary dark:hover:text-primary-light transition-colors">Terms &amp; Conditions</Link>
                 </motion.li>
               </ul>
             </motion.div>
           </div>
         </motion.div>
         
-        <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700" />
+        <hr className="my-8 border-gray-200 dark:border-gray-700" />
         
         <motion.div 
           className="sm:flex sm:items-center sm:justify-between"
@@ -95,13 +132,13 @@ export default function Footer() {
           viewport={{ once: true }}
         >
           <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-            © {currentYear} <Link href="/" className="hover:underline">MovieViewer</Link>. All Rights Reserved.
+            © {currentYear} <Link href="/" className="hover:text-primary">MovieViewer</Link>. All Rights Reserved.
           </span>
           
-          <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
+          <div className="flex mt-4 space-x-5 sm:justify-center sm:mt-0">
             <motion.a 
               href="#" 
-              className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+              className="text-gray-500 hover:text-primary dark:hover:text-primary-light"
               whileHover={{ scale: 1.2, y: -2 }}
               transition={{ duration: 0.2 }}
             >
@@ -112,7 +149,7 @@ export default function Footer() {
             </motion.a>
             <motion.a 
               href="#" 
-              className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+              className="text-gray-500 hover:text-primary dark:hover:text-primary-light"
               whileHover={{ scale: 1.2, y: -2 }}
               transition={{ duration: 0.2 }}
             >
@@ -123,7 +160,7 @@ export default function Footer() {
             </motion.a>
             <motion.a 
               href="#" 
-              className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+              className="text-gray-500 hover:text-primary dark:hover:text-primary-light"
               whileHover={{ scale: 1.2, y: -2 }}
               transition={{ duration: 0.2 }}
             >
@@ -134,7 +171,7 @@ export default function Footer() {
             </motion.a>
             <motion.a 
               href="#" 
-              className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+              className="text-gray-500 hover:text-primary dark:hover:text-primary-light"
               whileHover={{ scale: 1.2, y: -2 }}
               transition={{ duration: 0.2 }}
             >

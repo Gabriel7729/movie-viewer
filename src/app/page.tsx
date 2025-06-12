@@ -56,7 +56,7 @@ export default function Home() {
             >
               <h1 className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-6">
                 Discover <motion.span 
-                  className="text-blue-600"
+                  className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent font-extrabold"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5, duration: 0.5 }}
@@ -126,7 +126,7 @@ export default function Home() {
         </div>
       </motion.section>
       
-      <ParallaxSection className="py-16 bg-blue-50 dark:bg-gray-800">
+      <ParallaxSection className="py-16 bg-blue-50 dark:bg-gray-800 section-texture">
         <div className="container mx-auto px-4">
           <AnimateElement variants={slideUp}>
             <div className="text-center mb-12">
@@ -145,9 +145,9 @@ export default function Home() {
             viewport={{ once: true, amount: 0.2 }}
           >
             <AnimateElement delay={0.1}>
-              <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md text-center">
+              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md p-6 rounded-lg shadow-md text-center">
                 <motion.div 
-                  className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full mb-6"
+                  className="inline-flex items-center justify-center w-16 h-16 bg-primary-light/10 dark:bg-primary-dark/20 text-primary dark:text-primary-light rounded-full mb-6"
                   whileHover={{ scale: 1.1, rotate: 10 }}
                   transition={{ duration: 0.3 }}
                 >
@@ -163,9 +163,9 @@ export default function Home() {
             </AnimateElement>
             
             <AnimateElement delay={0.2}>
-              <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md text-center">
+              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md p-6 rounded-lg shadow-md text-center">
                 <motion.div 
-                  className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full mb-6"
+                  className="inline-flex items-center justify-center w-16 h-16 bg-accent-light/10 dark:bg-accent/20 text-accent dark:text-accent-light rounded-full mb-6"
                   whileHover={{ scale: 1.1, rotate: 10 }}
                   transition={{ duration: 0.3 }}
                 >
@@ -181,9 +181,9 @@ export default function Home() {
             </AnimateElement>
             
             <AnimateElement delay={0.3}>
-              <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md text-center">
+              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md p-6 rounded-lg shadow-md text-center">
                 <motion.div 
-                  className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full mb-6"
+                  className="inline-flex items-center justify-center w-16 h-16 bg-secondary-light/10 dark:bg-secondary/20 text-secondary dark:text-secondary-light rounded-full mb-6"
                   whileHover={{ scale: 1.1, rotate: 10 }}
                   transition={{ duration: 0.3 }}
                 >
@@ -201,7 +201,7 @@ export default function Home() {
         </div>
       </ParallaxSection>
       
-      <ParallaxSection className="py-16">
+      <ParallaxSection className="py-16 bg-transparent">
         <div className="container mx-auto px-4">
           <AnimateElement variants={slideUp}>
             <div className="text-center mb-12">
@@ -220,7 +220,7 @@ export default function Home() {
             viewport={{ once: true, amount: 0.1 }}
           >
             <AnimateElement delay={0.1}>
-              <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
                   <motion.img 
                     src="https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy71SPU58RSJu.jpg" 
@@ -253,7 +253,7 @@ export default function Home() {
             </AnimateElement>
             
             <AnimateElement delay={0.2}>
-              <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
                   <motion.img 
                     src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" 
@@ -286,7 +286,7 @@ export default function Home() {
             </AnimateElement>
             
             <AnimateElement delay={0.3}>
-              <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
                 <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
                   <motion.img 
                     src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
@@ -332,7 +332,7 @@ export default function Home() {
         </div>
       </ParallaxSection>
       
-      <ParallaxSection className="py-16 bg-blue-50 dark:bg-gray-800 border-t border-b border-gray-200 dark:border-gray-700">
+      <ParallaxSection className="py-16 bg-blue-50 dark:bg-gray-800 border-t border-b border-gray-200/30 dark:border-gray-700/30 section-texture">
         <div className="container mx-auto px-4">
           <div className="md:flex md:items-center md:justify-between">
             <motion.div 
@@ -349,7 +349,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                Ready to explore?
+                Ready to <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">explore</span>?
               </motion.h2>
               <motion.p 
                 className="text-lg text-gray-600 dark:text-gray-300 mb-6"
@@ -381,7 +381,7 @@ export default function Home() {
               transition={{ delay: 0.2 }}
             >
               <motion.div 
-                className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg"
+                className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md p-6 rounded-lg shadow-lg"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >

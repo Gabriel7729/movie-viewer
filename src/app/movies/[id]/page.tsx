@@ -147,7 +147,7 @@ export default function MovieDetailPage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {actors.map((actor) => (
                   <Link href={`/actors/${actor.id}`} key={actor.id}>
-                    <div className="bg-white dark:bg-gray-700 rounded-lg shadow overflow-hidden transition-transform hover:scale-105 cursor-pointer">
+                    <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow overflow-hidden transition-transform hover:scale-105 cursor-pointer">
                       <div className="relative w-full aspect-[3/4]">
                         <img
                           src={actor.photo}
@@ -177,10 +177,10 @@ export default function MovieDetailPage() {
               
               <div className="space-y-4">
                 {movie.ratings.map((rating) => (
-                  <div key={rating.id} className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-4">
+                  <div key={rating.id} className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <div className="bg-blue-100 dark:bg-blue-900 rounded-full w-8 h-8 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold">
+                        <div className="bg-primary-light/20 dark:bg-primary-dark/30 rounded-full w-8 h-8 flex items-center justify-center text-primary dark:text-primary-light font-bold">
                           {rating.value}
                         </div>
                         <span className="ml-2 font-medium text-gray-800 dark:text-white">User {rating.userId}</span>

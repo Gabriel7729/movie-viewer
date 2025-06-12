@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, InputHTMLAttributes } from 'react';
+import { motion } from 'framer-motion';
 
 interface SearchInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   value: string;
@@ -19,6 +20,7 @@ export default function SearchInput({
   ...props
 }: SearchInputProps) {
   const [localValue, setLocalValue] = useState(value);
+  const [isFocused, setIsFocused] = useState(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   
   // Sync the local value with the external value
@@ -61,23 +63,36 @@ export default function SearchInput({
   }, []);
   
   return (
-    <form onSubmit={handleSubmit} className={`relative ${className}`}>
+    <motion.form 
+      onSubmit={handleSubmit} 
+      className={`relative ${className}`}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <input
         type="text"
         value={localValue}
         onChange={handleChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
-        className="w-full px-4 py-2 pr-10 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600"
+        className={`w-full px-4 py-2 pr-10 text-gray-700 bg-white/70 backdrop-blur-md border border-gray-300 rounded-md 
+          focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary 
+          dark:bg-gray-800/70 dark:text-gray-200 dark:border-gray-600
+          transition-all duration-200 ${isFocused ? 'shadow-md' : ''}`}
         {...props}
       />
-      <button 
+      <motion.button 
         type="submit" 
-        className="absolute top-0 right-0 h-full px-3 text-gray-500 hover:text-blue-600 focus:outline-none"
+        className="absolute top-0 right-0 h-full px-3 text-gray-500 hover:text-primary focus:outline-none transition-colors"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
           <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
         </svg>
-      </button>
-    </form>
+      </motion.button>
+    </motion.form>
   );
 } 

@@ -22,7 +22,7 @@ export default function Card({
   if (!animate) {
     return (
       <div
-        className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden ${className}`}
+        className={`bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden ${className}`}
         onClick={onClick}
       >
         {children}
@@ -32,7 +32,7 @@ export default function Card({
 
   return (
     <motion.div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden ${className}`}
+      className={`bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden ${className}`}
       onClick={onClick}
       whileHover={onClick ? hoverScale : {}}
       initial="hidden"
@@ -91,7 +91,7 @@ interface CardTitleProps {
 export function CardTitle({ children, className = '' }: CardTitleProps) {
   return (
     <motion.h3 
-      className={`text-xl font-bold mb-2 dark:text-white ${className}`}
+      className={`text-xl font-bold mb-2 text-gray-800 dark:text-white ${className}`}
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -127,7 +127,7 @@ interface CardFooterProps {
 export function CardFooter({ children, className = '' }: CardFooterProps) {
   return (
     <motion.div 
-      className={`px-4 py-3 bg-gray-50 dark:bg-gray-700 ${className}`}
+      className={`px-4 py-3 bg-gray-50/70 dark:bg-gray-700/70 ${className}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.2, duration: 0.3 }}

@@ -114,7 +114,7 @@ export default function ActorDetailPage() {
             />
           </div>
           
-          <div className="mt-6 bg-white dark:bg-gray-700 rounded-lg shadow-md p-4">
+          <div className="mt-6 bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md p-4">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Personal Info</h2>
             
             <div className="space-y-3">
