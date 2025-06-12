@@ -66,9 +66,9 @@ export default function RegisterPage() {
         <p className="text-gray-600 dark:text-gray-300">Join our community of movie enthusiasts</p>
       </div>
       
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-lg shadow-md p-6 mb-6 border border-white/20 dark:border-gray-700/30">
         {error && (
-          <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 p-3 rounded-md mb-4">
+          <div className="bg-red-100/80 dark:bg-red-900/80 backdrop-blur-sm text-red-700 dark:text-red-300 p-3 rounded-md mb-4">
             {error}
           </div>
         )}
@@ -83,7 +83,7 @@ export default function RegisterPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white"
               required
               minLength={3}
             />
@@ -98,7 +98,7 @@ export default function RegisterPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white"
               required
             />
           </div>
@@ -112,7 +112,7 @@ export default function RegisterPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white"
               required
               minLength={6}
             />
@@ -127,7 +127,7 @@ export default function RegisterPage() {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white"
               required
               minLength={6}
             />
@@ -142,7 +142,7 @@ export default function RegisterPage() {
       <div className="text-center">
         <p className="text-gray-600 dark:text-gray-400">
           Already have an account?{' '}
-          <Link href="/auth/login" className="text-blue-600 hover:underline">
+          <Link href="/auth/login" className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary hover:underline transition-colors">
             Sign in
           </Link>
         </p>

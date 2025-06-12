@@ -44,9 +44,9 @@ export default function LoginPage() {
         <p className="text-gray-600 dark:text-gray-300">Sign in to access your account</p>
       </div>
       
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-lg shadow-md p-6 mb-6 border border-white/20 dark:border-gray-700/30">
         {error && (
-          <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 p-3 rounded-md mb-4">
+          <div className="bg-red-100/80 dark:bg-red-900/80 backdrop-blur-sm text-red-700 dark:text-red-300 p-3 rounded-md mb-4">
             {error}
           </div>
         )}
@@ -62,7 +62,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={`Try with "${mockUserEmail}"`}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               required
             />
           </div>
@@ -77,7 +77,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Any password will work for the demo"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               required
             />
           </div>
@@ -91,7 +91,7 @@ export default function LoginPage() {
       <div className="text-center">
         <p className="text-gray-600 dark:text-gray-400">
           Don&apos;t have an account?{' '}
-          <Link href="/auth/register" className="text-blue-600 hover:underline">
+          <Link href="/auth/register" className="text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-primary hover:underline transition-colors">
             Create one
           </Link>
         </p>

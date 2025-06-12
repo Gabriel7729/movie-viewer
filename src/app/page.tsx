@@ -92,7 +92,7 @@ export default function Home() {
                     >
                       <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
                         <Image 
-                          src="https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy71SPU58RSJu.jpg" 
+                          src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg" 
                           alt="Inception" 
                           fill
                           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
