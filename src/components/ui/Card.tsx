@@ -1,19 +1,47 @@
+"use client";
+
 import { ReactNode } from 'react';
+import { motion, MotionProps, HTMLMotionProps } from 'framer-motion';
+import { scaleUp, hoverScale } from '@/utils/animation';
 
 interface CardProps {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  animate?: boolean;
+  delay?: number;
 }
 
-export default function Card({ children, className = '', onClick }: CardProps) {
+export default function Card({ 
+  children, 
+  className = '', 
+  onClick,
+  animate = true,
+  delay = 0
+}: CardProps) {
+  if (!animate) {
+    return (
+      <div
+        className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden ${className}`}
+        onClick={onClick}
+      >
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div 
+    <motion.div
       className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden ${className}`}
       onClick={onClick}
+      whileHover={onClick ? hoverScale : {}}
+      initial="hidden"
+      animate="visible"
+      variants={scaleUp}
+      transition={{ delay }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -26,10 +54,13 @@ interface CardImageProps {
 export function CardImage({ src, alt, className = '' }: CardImageProps) {
   return (
     <div className={`relative w-full aspect-[2/3] ${className}`}>
-      <img 
+      <motion.img 
         src={src} 
         alt={alt} 
         className="absolute top-0 left-0 w-full h-full object-cover"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
         onError={(e) => {
           e.currentTarget.onerror = null;
           e.currentTarget.src = 'https://via.placeholder.com/300x450?text=No+Image';
@@ -59,9 +90,14 @@ interface CardTitleProps {
 
 export function CardTitle({ children, className = '' }: CardTitleProps) {
   return (
-    <h3 className={`text-xl font-bold mb-2 dark:text-white ${className}`}>
+    <motion.h3 
+      className={`text-xl font-bold mb-2 dark:text-white ${className}`}
+      initial={{ opacity: 0, y: -5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       {children}
-    </h3>
+    </motion.h3>
   );
 }
 
@@ -72,9 +108,14 @@ interface CardDescriptionProps {
 
 export function CardDescription({ children, className = '' }: CardDescriptionProps) {
   return (
-    <p className={`text-gray-600 dark:text-gray-300 ${className}`}>
+    <motion.p 
+      className={`text-gray-600 dark:text-gray-300 ${className}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.1, duration: 0.3 }}
+    >
       {children}
-    </p>
+    </motion.p>
   );
 }
 
@@ -85,8 +126,13 @@ interface CardFooterProps {
 
 export function CardFooter({ children, className = '' }: CardFooterProps) {
   return (
-    <div className={`px-4 py-3 bg-gray-50 dark:bg-gray-700 ${className}`}>
+    <motion.div 
+      className={`px-4 py-3 bg-gray-50 dark:bg-gray-700 ${className}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.2, duration: 0.3 }}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 } 

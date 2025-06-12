@@ -1,6 +1,10 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+"use client";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+import { ReactNode } from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
+import { hoverScale } from '@/utils/animation';
+
+interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'link';
   size?: 'sm' | 'md' | 'lg';
@@ -40,9 +44,14 @@ export default function Button({
   const appliedSizeStyles = variant === 'link' ? 'text-base' : sizeStyles[size];
   
   return (
-    <button
+    <motion.button
       className={`${baseStyles} ${variantStyles[variant]} ${appliedSizeStyles} ${widthStyle} ${disabledStyle} ${className}`}
       disabled={disabled || isLoading}
+      whileHover={!disabled && !isLoading ? hoverScale : {}}
+      whileTap={!disabled && !isLoading ? { scale: 0.98 } : {}}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
       {...props}
     >
       {isLoading && (
@@ -52,6 +61,6 @@ export default function Button({
         </svg>
       )}
       {children}
-    </button>
+    </motion.button>
   );
 } 
