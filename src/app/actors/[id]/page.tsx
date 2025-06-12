@@ -7,7 +7,7 @@ import { useActor } from '@/services/hooks';
 import { apiService } from '@/services/api';
 import { Movie } from '@/types';
 import Button from '@/components/ui/Button';
-import Card, { CardImage, CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
+import Card, { CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 
 export default function ActorDetailPage() {

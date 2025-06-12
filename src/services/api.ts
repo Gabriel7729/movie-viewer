@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Actor, ApiResponse, LoginCredentials, Movie, PaginatedResponse, Rating, RegisterCredentials, User } from '@/types';
+import { Actor, ApiResponse, LoginCredentials, Movie, PaginatedResponse, RegisterCredentials, User } from '@/types';
 
 // Mock data
 const mockMovies: Movie[] = [
