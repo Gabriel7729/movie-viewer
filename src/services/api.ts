@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Actor, ApiResponse, AuthResponseDto, BaseResponseDto, CreateMovieDto, LoginCredentials, LoginDto, Movie, PaginatedResponse, Rating, RegisterCredentials, RegisterDto, UpdateMovieDto, User } from '@/types';
+import { Actor, AuthResponseDto, BaseResponseDto, CreateMovieDto, LoginDto, Movie, Rating, RegisterDto, UpdateMovieDto } from '@/types';
 
 // Create an axios instance
 const api = axios.create({

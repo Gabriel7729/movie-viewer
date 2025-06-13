@@ -1,8 +1,7 @@
 import useSWR, { mutate } from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { Actor, BaseResponseDto, CreateMovieDto, Movie, UpdateMovieDto } from '@/types';
+import { Actor, CreateMovieDto, UpdateMovieDto } from '@/types';
 import { actorService, movieService, ratingService } from './api';
-import api from './api';
 
 // Movies hooks
 export function useMovies() {

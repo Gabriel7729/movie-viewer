@@ -6,13 +6,12 @@ import Image from 'next/image';
 import { useInfiniteActors, useActorSearch } from '@/services/hooks';
 import Card, { CardContent, CardTitle } from '@/components/ui/Card';
 import SearchInput from '@/components/ui/SearchInput';
-import Button from '@/components/ui/Button';
 import { Actor } from '@/types';
 
 export default function ActorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  const { data, isLoading, isValidating } = useInfiniteActors();
+  const { data, isLoading } = useInfiniteActors();
   const { data: searchResults, isLoading: isSearchLoading } = useActorSearch(debouncedQuery);
   
   // Set up debounced search query

@@ -6,14 +6,13 @@ import Image from 'next/image';
 import { useInfiniteMovies, useMovieSearch } from '@/services/hooks';
 import Card, { CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
 import SearchInput from '@/components/ui/SearchInput';
-import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { Movie } from '@/types';
 
 export default function MoviesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  const { data, isLoading, isValidating } = useInfiniteMovies();
+  const { data, isLoading } = useInfiniteMovies();
   const { data: searchResults, isLoading: isSearchLoading } = useMovieSearch(debouncedQuery);
   
   // Set up debounced search query
