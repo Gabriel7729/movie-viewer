@@ -2,13 +2,46 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import { motion } from 'framer-motion';
+import { authService } from '@/services/api';
+import { UserResponseDto } from '@/types';
 
 export default function Header() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // This would come from auth context in a real app
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<UserResponseDto | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  useEffect(() => {
+    // Check authentication status on mount and when localStorage changes
+    const checkAuth = () => {
+      const isAuth = authService.isAuthenticated();
+      setIsAuthenticated(isAuth);
+      
+      if (isAuth) {
+        setUser(authService.getCurrentUser());
+      } else {
+        setUser(null);
+      }
+    };
+    
+    // Initial check
+    checkAuth();
+    
+    // Listen for storage events (when user logs in/out in another tab)
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +53,13 @@ export default function Header() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  
+  const handleSignOut = () => {
+    authService.logout();
+    setIsAuthenticated(false);
+    setUser(null);
+    router.push('/');
+  };
   
   return (
     <motion.header 
@@ -72,12 +112,17 @@ export default function Header() {
             transition={{ duration: 0.5 }}
           >
             {isAuthenticated ? (
-              <Button 
-                variant="outline" 
-                onClick={() => setIsAuthenticated(false)}
-              >
-                Sign Out
-              </Button>
+              <div className="flex items-center space-x-4">
+                <div className="text-sm text-gray-700 dark:text-gray-300">
+                  Welcome, {user?.name || 'User'}
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </Button>
+              </div>
             ) : (
               <>
                 <Link href="/auth/login">
@@ -137,13 +182,18 @@ export default function Header() {
           <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
             <div className="px-4 flex flex-col space-y-3">
               {isAuthenticated ? (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setIsAuthenticated(false)}
-                  fullWidth
-                >
-                  Sign Out
-                </Button>
+                <>
+                  <div className="text-sm text-gray-700 dark:text-gray-300 py-2 text-center">
+                    Welcome, {user?.name || 'User'}
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleSignOut}
+                    fullWidth
+                  >
+                    Sign Out
+                  </Button>
+                </>
               ) : (
                 <>
                   <Link href="/auth/login" className="w-full">

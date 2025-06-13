@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { Actor, ApiResponse, BaseResponseDto, CreateMovieDto, LoginCredentials, Movie, PaginatedResponse, Rating, RegisterCredentials, UpdateMovieDto, User } from '@/types';
+import { Actor, ApiResponse, AuthResponseDto, BaseResponseDto, CreateMovieDto, LoginCredentials, LoginDto, Movie, PaginatedResponse, Rating, RegisterCredentials, RegisterDto, UpdateMovieDto, User } from '@/types';
 
 // Create an axios instance
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   }
 });
 
@@ -20,6 +20,69 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+// Authentication service
+export const authService = {
+  login: async (credentials: LoginDto): Promise<BaseResponseDto<AuthResponseDto>> => {
+    try {
+      const response = await api.post<BaseResponseDto<AuthResponseDto>>('/auth/login', credentials);
+      
+      // Store token in localStorage
+      if (response.data.data.access_token) {
+        localStorage.setItem('token', response.data.data.access_token);
+        
+        // Store user data
+        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
+  },
+  
+  register: async (userData: RegisterDto): Promise<BaseResponseDto<AuthResponseDto>> => {
+    try {
+      const response = await api.post<BaseResponseDto<AuthResponseDto>>('/auth/register', userData);
+      
+      // Store token in localStorage
+      if (response.data.data.access_token) {
+        localStorage.setItem('token', response.data.data.access_token);
+        
+        // Store user data
+        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
+    }
+  },
+  
+  logout: (): void => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  },
+  
+  getCurrentUser: () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        return JSON.parse(userStr);
+      } catch (e) {
+        console.error('Error parsing user from localStorage:', e);
+        return null;
+      }
+    }
+    return null;
+  },
+  
+  isAuthenticated: (): boolean => {
+    return !!localStorage.getItem('token');
+  }
+};
 
 // Movie service for backend API calls
 export const movieService = {

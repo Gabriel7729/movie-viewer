@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import api from '@/services/api';
+import { authService } from '@/services/api';
 import Button from '@/components/ui/Button';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -40,23 +40,16 @@ export default function RegisterPage() {
     setIsLoading(true);
     
     try {
-      const response = await api.post('/auth/register', {
-        username,
+      await authService.register({
+        name,
         email,
         password,
       });
-      
-      // Store the token in local storage
-      if (response.data && response.data.data && response.data.data.token) {
-        localStorage.setItem('token', response.data.data.token);
-        // Redirect to home page
-        router.push('/');
-      } else {
-        setError('Invalid response from server');
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-      setError('Registration failed. This email may already be registered.');
+      // Redirect to home page after successful registration
+      router.push('/');
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.response?.data?.message || 'Registration failed. This email may already be registered.');
     } finally {
       setIsLoading(false);
     }
@@ -78,14 +71,14 @@ export default function RegisterPage() {
         
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Username
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Name
             </label>
             <input
-              id="username"
+              id="name"
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white"
               required
               minLength={3}

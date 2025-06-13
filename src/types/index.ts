@@ -69,18 +69,39 @@ export interface Rating {
 }
 
 // Authentication types
-export interface User {
+export interface UserResponseDto {
   id: number;
-  username: string;
+  name: string;
   email: string;
 }
 
+export interface AuthResponseDto {
+  access_token: string;
+  user: UserResponseDto;
+}
+
 export interface AuthState {
-  user: User | null;
+  user: UserResponseDto | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+}
+
+export interface LoginDto {
+  email: string;
+  password: string;
+}
+
+export interface RegisterDto extends LoginDto {
+  name: string;
+}
+
+// Legacy types - keeping for compatibility
+export interface User {
+  id: number;
+  username: string;
+  email: string;
 }
 
 export interface LoginCredentials {

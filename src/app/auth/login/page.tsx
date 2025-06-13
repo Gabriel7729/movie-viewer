@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import api from '@/services/api';
+import { authService } from '@/services/api';
 import Button from '@/components/ui/Button';
 
 export default function LoginPage() {
@@ -19,19 +19,12 @@ export default function LoginPage() {
     setIsLoading(true);
     
     try {
-      const response = await api.post('/auth/login', { email, password });
-      
-      // Store the token in local storage
-      if (response.data && response.data.data && response.data.data.token) {
-        localStorage.setItem('token', response.data.data.token);
-        // Redirect to home page
-        router.push('/');
-      } else {
-        setError('Invalid response from server');
-      }
-    } catch (err) {
+      await authService.login({ email, password });
+      // Redirect to home page after successful login
+      router.push('/');
+    } catch (err: any) {
       console.error('Login error:', err);
-      setError('Invalid email or password');
+      setError(err.response?.data?.message || 'Invalid email or password');
     } finally {
       setIsLoading(false);
     }
