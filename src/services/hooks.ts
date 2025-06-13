@@ -12,7 +12,7 @@ export function useMovies() {
 // Key factory for pagination
 const getMoviesKey = (pageIndex: number, previousPageData: any) => {
   // Reached the end
-  if (previousPageData && !previousPageData.data?.length) return null;
+  if (previousPageData && previousPageData.data?.length === 0) return null;
   
   // First page, no previousPageData
   if (pageIndex === 0) return 'movies-page-1';
@@ -28,12 +28,20 @@ export function useInfiniteMovies(limit = 10) {
       // Extract page number from key
       const page = parseInt(key.split('-page-')[1]) || 1;
       
-      // Fetch movies for the page
-      const response = await api.get(`/movies?page=${page}&limit=${limit}`);
-      return response.data;
+      try {
+        // Fetch movies for the page
+        const response = await api.get(`/movies?page=${page}&limit=${limit}`);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+        // Return empty data on error to prevent further fetching
+        return { data: [] };
+      }
     },
     {
-      revalidateFirstPage: false
+      revalidateFirstPage: false,
+      revalidateAll: false, // Don't revalidate all pages on focus/reconnect
+      persistSize: true // Maintain the size when data is updated
     }
   );
 }
@@ -43,8 +51,28 @@ export function useMovieSearch(query: string) {
     query ? `movie-search-${query}` : null,
     async () => {
       if (!query) return { data: [] };
-      const response = await api.get(`/movies/search?query=${encodeURIComponent(query)}`);
-      return response.data;
+      
+      try {
+        // Try the specific search endpoint first
+        const response = await api.get(`/movies/search?query=${encodeURIComponent(query)}`);
+        return response.data;
+      } catch (error) {
+        console.error('Search endpoint error, falling back to filter:', error);
+        // Fall back to filtering all movies if search endpoint fails
+        const allMovies = await movieService.getAllMovies();
+        const filteredMovies = allMovies.data.filter(movie => 
+          movie.title.toLowerCase().includes(query.toLowerCase()) || 
+          movie.description.toLowerCase().includes(query.toLowerCase())
+        );
+        return { 
+          data: filteredMovies,
+          message: `Found ${filteredMovies.length} movies matching "${query}"`
+        };
+      }
+    },
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000 // Cache the search results for 10 seconds
     }
   );
 }
@@ -67,7 +95,7 @@ export function useMovieActors(movieId: number | null) {
 // Key factory for pagination
 const getActorsKey = (pageIndex: number, previousPageData: any) => {
   // Reached the end
-  if (previousPageData && !previousPageData.data?.length) return null;
+  if (previousPageData && previousPageData.data?.length === 0) return null;
   
   // First page, no previousPageData
   if (pageIndex === 0) return 'actors-page-1';
@@ -83,12 +111,20 @@ export function useInfiniteActors(limit = 10) {
       // Extract page number from key
       const page = parseInt(key.split('-page-')[1]) || 1;
       
-      // Fetch actors for the page
-      const response = await api.get(`/actors?page=${page}&limit=${limit}`);
-      return response.data;
+      try {
+        // Fetch actors for the page
+        const response = await api.get(`/actors?page=${page}&limit=${limit}`);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching actors:', error);
+        // Return empty data on error to prevent further fetching
+        return { data: [] };
+      }
     },
     {
-      revalidateFirstPage: false
+      revalidateFirstPage: false,
+      revalidateAll: false, // Don't revalidate all pages on focus/reconnect
+      persistSize: true // Maintain the size when data is updated
     }
   );
 }
@@ -98,8 +134,29 @@ export function useActorSearch(query: string) {
     query ? `actor-search-${query}` : null,
     async () => {
       if (!query) return { data: [] };
-      const response = await api.get(`/actors/search?query=${encodeURIComponent(query)}`);
-      return response.data;
+      
+      try {
+        // Try the specific search endpoint first
+        const response = await api.get(`/actors/search?query=${encodeURIComponent(query)}`);
+        return response.data;
+      } catch (error) {
+        console.error('Search endpoint error, falling back to filter:', error);
+        // Fall back to filtering all actors if search endpoint fails
+        const response = await api.get('/actors');
+        const actors = response.data.data || [];
+        const filteredActors = actors.filter((actor: Actor) => 
+          (actor.firstName + ' ' + actor.lastName).toLowerCase().includes(query.toLowerCase()) ||
+          actor.nationality.toLowerCase().includes(query.toLowerCase())
+        );
+        return { 
+          data: filteredActors,
+          message: `Found ${filteredActors.length} actors matching "${query}"`
+        };
+      }
+    },
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 10000 // Cache the search results for 10 seconds
     }
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useInfiniteActors, useActorSearch } from '@/services/hooks';
@@ -11,17 +11,23 @@ import { Actor } from '@/types';
 
 export default function ActorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data, isLoading, size, setSize, isValidating } = useInfiniteActors();
-  const { data: searchResults } = useActorSearch(searchQuery);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const { data, isLoading, isValidating } = useInfiniteActors();
+  const { data: searchResults, isLoading: isSearchLoading } = useActorSearch(debouncedQuery);
+  
+  // Set up debounced search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
   
   // When searching, display search results, otherwise display infinite scroll data
-  const displayData = searchQuery 
+  const displayData = debouncedQuery 
     ? searchResults?.data || [] 
     : data?.flatMap(page => page.data) || [];
-  
-  // Check if we've loaded all items
-  const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
-  const reachedEnd = data && data.some(page => !page.data || page.data.length === 0);
   
   return (
     <div>
@@ -40,7 +46,7 @@ export default function ActorsPage() {
         </div>
       </div>
       
-      {isLoading && !data ? (
+      {(isLoading && !data) || (debouncedQuery && isSearchLoading) ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
@@ -68,18 +74,6 @@ export default function ActorsPage() {
               </Link>
             ))}
           </div>
-          
-          {!searchQuery && !reachedEnd && (
-            <div className="flex justify-center mt-8">
-              <Button 
-                onClick={() => setSize(size + 1)} 
-                isLoading={isValidating}
-                disabled={isLoadingMore}
-              >
-                Load More
-              </Button>
-            </div>
-          )}
         </>
       ) : (
         <div className="flex flex-col items-center justify-center h-64">
@@ -87,7 +81,7 @@ export default function ActorsPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
           </svg>
           <p className="text-xl text-gray-600 dark:text-gray-300">No actors found</p>
-          {searchQuery && (
+          {debouncedQuery && (
             <p className="mt-2 text-gray-500 dark:text-gray-400">
               Try adjusting your search criteria
             </p>
