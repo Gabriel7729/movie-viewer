@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Actor, ApiResponse, BaseResponseDto, CreateMovieDto, LoginCredentials, Movie, PaginatedResponse, RegisterCredentials, UpdateMovieDto, User } from '@/types';
+import { Actor, ApiResponse, BaseResponseDto, CreateMovieDto, LoginCredentials, Movie, PaginatedResponse, Rating, RegisterCredentials, UpdateMovieDto, User } from '@/types';
 
 // Create an axios instance
 const api = axios.create({
@@ -30,8 +30,40 @@ export const movieService = {
   },
   
   getMovieById: async (id: number): Promise<BaseResponseDto<Movie>> => {
-    const response = await api.get<BaseResponseDto<Movie>>(`/movies/${id}`);
-    return response.data;
+    try {
+      // Try to get all movies and filter by ID
+      const allMovies = await movieService.getAllMovies();
+      const movie = allMovies.data.find(m => m.id === id);
+      
+      if (!movie) {
+        throw new Error(`Movie with ID ${id} not found`);
+      }
+      
+      // Get movie ratings if available
+      try {
+        const ratings = await ratingService.getMovieRatings(id);
+        movie.ratings = ratings.data;
+      } catch (error) {
+        console.error('Failed to fetch movie ratings:', error);
+      }
+      
+      // Get movie actors
+      try {
+        const actorsResponse = await movieService.getActorsByMovie(id);
+        movie.actors = actorsResponse.data;
+      } catch (error) {
+        console.error('Failed to fetch movie actors:', error);
+      }
+      
+      return {
+        data: movie,
+        message: 'Movie found',
+        statusCode: 200
+      };
+    } catch (error) {
+      console.error('Error fetching movie by ID:', error);
+      throw error;
+    }
   },
   
   createMovie: async (movie: CreateMovieDto): Promise<BaseResponseDto<Movie>> => {
@@ -50,6 +82,78 @@ export const movieService = {
   
   getActorsByMovie: async (id: number): Promise<BaseResponseDto<Actor[]>> => {
     const response = await api.get<BaseResponseDto<Actor[]>>(`/movies/${id}/actors`);
+    return response.data;
+  }
+};
+
+// Actor service for backend API calls
+export const actorService = {
+  getAllActors: async (): Promise<BaseResponseDto<Actor[]>> => {
+    const response = await api.get<BaseResponseDto<Actor[]>>('/actors');
+    return response.data;
+  },
+  
+  getActorById: async (id: number): Promise<BaseResponseDto<Actor>> => {
+    try {
+      // Try to get all actors and filter by ID
+      const allActors = await actorService.getAllActors();
+      const actor = allActors.data.find(a => a.id === id);
+      
+      if (!actor) {
+        throw new Error(`Actor with ID ${id} not found`);
+      }
+      
+      // Get actor's movies
+      try {
+        const moviesResponse = await actorService.getMoviesByActor(id);
+        actor.movies = moviesResponse.data;
+      } catch (error) {
+        console.error('Failed to fetch actor movies:', error);
+      }
+      
+      return {
+        data: actor,
+        message: 'Actor found',
+        statusCode: 200
+      };
+    } catch (error) {
+      console.error('Error fetching actor by ID:', error);
+      throw error;
+    }
+  },
+  
+  getMoviesByActor: async (id: number): Promise<BaseResponseDto<Movie[]>> => {
+    const response = await api.get<BaseResponseDto<Movie[]>>(`/actors/${id}/movies`);
+    return response.data;
+  }
+};
+
+// Rating service for backend API calls
+export const ratingService = {
+  getAllRatings: async (): Promise<BaseResponseDto<Rating[]>> => {
+    const response = await api.get<BaseResponseDto<Rating[]>>('/ratings');
+    return response.data;
+  },
+  
+  getMovieRatings: async (movieId: number): Promise<BaseResponseDto<Rating[]>> => {
+    try {
+      // Get all ratings and filter by movie ID
+      const allRatings = await ratingService.getAllRatings();
+      const movieRatings = allRatings.data.filter(r => r.movieId === movieId);
+      
+      return {
+        data: movieRatings,
+        message: `Ratings for movie ${movieId} found`,
+        statusCode: 200
+      };
+    } catch (error) {
+      console.error('Error fetching movie ratings:', error);
+      throw error;
+    }
+  },
+  
+  addRating: async (rating: { movieId: number; rating: number; review?: string; reviewerName?: string }): Promise<BaseResponseDto<Rating>> => {
+    const response = await api.post<BaseResponseDto<Rating>>('/ratings', rating);
     return response.data;
   }
 };

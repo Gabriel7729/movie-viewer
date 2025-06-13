@@ -3,46 +3,20 @@
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useMovie } from '@/services/hooks';
-import { Actor, Movie } from '@/types';
+import { useActor } from '@/services/hooks';
+import { Movie } from '@/types';
 import Button from '@/components/ui/Button';
 import Card, { CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
-import { useState, useEffect } from 'react';
-import api from '@/services/api';
 
 export default function ActorDetailPage() {
   const params = useParams();
   const router = useRouter();
   const actorId = typeof params.id === 'string' ? parseInt(params.id, 10) : null;
   
-  const [actor, setActor] = useState<Actor | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [movies, setMovies] = useState<Movie[]>([]);
-  
-  // Fetch actor data
-  useEffect(() => {
-    if (!actorId) return;
-    
-    const fetchActor = async () => {
-      setIsLoading(true);
-      try {
-        // First, fetch the actor
-        const response = await api.get(`/actors/${actorId}`);
-        if (response.data && response.data.data) {
-          setActor(response.data.data);
-        }
-      } catch (err) {
-        console.error('Error fetching actor:', err);
-        setError(err instanceof Error ? err : new Error('Failed to fetch actor'));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchActor();
-  }, [actorId]);
+  const { data: actorResponse, error, isLoading } = useActor(actorId);
+  const actor = actorResponse?.data;
+  const movies = actor?.movies || [];
   
   // Calculate age from birthDate
   const calculateAge = (birthDate: string) => {
@@ -133,8 +107,8 @@ export default function ActorDetailPage() {
               <div>
                 <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300">Movies</h3>
                 <p className="text-gray-800 dark:text-white">
-                  {actor.movies ? actor.movies.length : 0} 
-                  {actor.movies?.length === 1 ? ' movie' : ' movies'}
+                  {movies.length} 
+                  {movies.length === 1 ? ' movie' : ' movies'}
                 </p>
               </div>
             </div>
@@ -150,9 +124,9 @@ export default function ActorDetailPage() {
           <div>
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Filmography</h2>
             
-            {actor.movies && actor.movies.length > 0 ? (
+            {movies.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {actor.movies.map((movie) => (
+                {movies.map((movie: Movie) => (
                   <Link href={`/movies/${movie.id}`} key={movie.id}>
                     <Card className="h-full transition-transform hover:scale-105 hover:shadow-lg cursor-pointer">
                       <div className="flex">

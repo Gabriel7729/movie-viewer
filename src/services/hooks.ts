@@ -1,7 +1,7 @@
 import useSWR, { mutate } from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import { Actor, BaseResponseDto, CreateMovieDto, Movie, UpdateMovieDto } from '@/types';
-import { movieService } from './api';
+import { actorService, movieService, ratingService } from './api';
 import api from './api';
 
 // Movies hooks
@@ -29,9 +29,19 @@ export function useInfiniteMovies(limit = 10) {
       const page = parseInt(key.split('-page-')[1]) || 1;
       
       try {
-        // Fetch movies for the page
-        const response = await api.get(`/movies?page=${page}&limit=${limit}`);
-        return response.data;
+        // Fetch movies for the page - since we don't have real pagination, just get all
+        const response = await movieService.getAllMovies();
+        
+        // Simulate pagination by slicing the array
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        const paginatedData = response.data.slice(start, end);
+        
+        return { 
+          data: paginatedData,
+          message: `Page ${page} of movies`,
+          statusCode: 200
+        };
       } catch (error) {
         console.error('Error fetching movies:', error);
         // Return empty data on error to prevent further fetching
@@ -53,21 +63,22 @@ export function useMovieSearch(query: string) {
       if (!query) return { data: [] };
       
       try {
-        // Try the specific search endpoint first
-        const response = await api.get(`/movies/search?query=${encodeURIComponent(query)}`);
-        return response.data;
-      } catch (error) {
-        console.error('Search endpoint error, falling back to filter:', error);
-        // Fall back to filtering all movies if search endpoint fails
+        // Get all movies and filter by query
         const allMovies = await movieService.getAllMovies();
         const filteredMovies = allMovies.data.filter(movie => 
           movie.title.toLowerCase().includes(query.toLowerCase()) || 
-          movie.description.toLowerCase().includes(query.toLowerCase())
+          movie.description.toLowerCase().includes(query.toLowerCase()) ||
+          movie.genre.toLowerCase().includes(query.toLowerCase()) ||
+          movie.director.toLowerCase().includes(query.toLowerCase())
         );
+        
         return { 
           data: filteredMovies,
           message: `Found ${filteredMovies.length} movies matching "${query}"`
         };
+      } catch (error) {
+        console.error('Search error:', error);
+        return { data: [] };
       }
     },
     {
@@ -88,6 +99,13 @@ export function useMovieActors(movieId: number | null) {
   return useSWR(
     movieId ? `movie-actors-${movieId}` : null,
     () => movieId !== null ? movieService.getActorsByMovie(movieId) : null
+  );
+}
+
+export function useMovieRatings(movieId: number | null) {
+  return useSWR(
+    movieId ? `movie-ratings-${movieId}` : null,
+    () => movieId !== null ? ratingService.getMovieRatings(movieId) : null
   );
 }
 
@@ -112,9 +130,19 @@ export function useInfiniteActors(limit = 10) {
       const page = parseInt(key.split('-page-')[1]) || 1;
       
       try {
-        // Fetch actors for the page
-        const response = await api.get(`/actors?page=${page}&limit=${limit}`);
-        return response.data;
+        // Fetch actors for the page - since we don't have real pagination, just get all
+        const response = await actorService.getAllActors();
+        
+        // Simulate pagination by slicing the array
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        const paginatedData = response.data.slice(start, end);
+        
+        return { 
+          data: paginatedData,
+          message: `Page ${page} of actors`,
+          statusCode: 200
+        };
       } catch (error) {
         console.error('Error fetching actors:', error);
         // Return empty data on error to prevent further fetching
@@ -136,28 +164,40 @@ export function useActorSearch(query: string) {
       if (!query) return { data: [] };
       
       try {
-        // Try the specific search endpoint first
-        const response = await api.get(`/actors/search?query=${encodeURIComponent(query)}`);
-        return response.data;
-      } catch (error) {
-        console.error('Search endpoint error, falling back to filter:', error);
-        // Fall back to filtering all actors if search endpoint fails
-        const response = await api.get('/actors');
-        const actors = response.data.data || [];
-        const filteredActors = actors.filter((actor: Actor) => 
+        // Get all actors and filter by query
+        const allActors = await actorService.getAllActors();
+        const filteredActors = allActors.data.filter((actor: Actor) => 
           (actor.firstName + ' ' + actor.lastName).toLowerCase().includes(query.toLowerCase()) ||
           actor.nationality.toLowerCase().includes(query.toLowerCase())
         );
+        
         return { 
           data: filteredActors,
           message: `Found ${filteredActors.length} actors matching "${query}"`
         };
+      } catch (error) {
+        console.error('Search error:', error);
+        return { data: [] };
       }
     },
     {
       revalidateOnFocus: false,
       dedupingInterval: 10000 // Cache the search results for 10 seconds
     }
+  );
+}
+
+export function useActor(id: number | null) {
+  return useSWR(
+    id ? `actor-${id}` : null,
+    () => id !== null ? actorService.getActorById(id) : null
+  );
+}
+
+export function useActorMovies(actorId: number | null) {
+  return useSWR(
+    actorId ? `actor-movies-${actorId}` : null,
+    () => actorId !== null ? actorService.getMoviesByActor(actorId) : null
   );
 }
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useMovie, useMovieActors } from '@/services/hooks';
+import { useMovie, useMovieActors, useMovieRatings } from '@/services/hooks';
 import { Actor } from '@/types';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
@@ -16,8 +16,11 @@ export default function MovieDetailPage() {
   
   const { data: movieResponse, error, isLoading } = useMovie(movieId);
   const { data: actorsResponse, isLoading: isLoadingActors } = useMovieActors(movieId);
+  const { data: ratingsResponse, isLoading: isLoadingRatings } = useMovieRatings(movieId);
+  
   const movie = movieResponse?.data;
   const actors = actorsResponse?.data || [];
+  const ratings = ratingsResponse?.data || movie?.ratings || [];
   
   // Handle loading and error states
   if (isLoading) {
@@ -136,30 +139,36 @@ export default function MovieDetailPage() {
             )}
           </div>
           
-          {movie.ratings && movie.ratings.length > 0 && (
+          {ratings.length > 0 && (
             <div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Reviews</h2>
               
-              <div className="space-y-4">
-                {movie.ratings.map((rating) => (
-                  <div key={rating.id} className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center">
-                        <div className="bg-primary-light/20 dark:bg-primary-dark/30 rounded-full w-8 h-8 flex items-center justify-center text-primary dark:text-primary-light font-bold">
-                          {rating.rating}
+              {isLoadingRatings ? (
+                <div className="flex justify-center items-center h-32">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {ratings.map((rating) => (
+                    <div key={rating.id} className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <div className="bg-primary-light/20 dark:bg-primary-dark/30 rounded-full w-8 h-8 flex items-center justify-center text-primary dark:text-primary-light font-bold">
+                            {rating.rating}
+                          </div>
+                          <span className="ml-2 font-medium text-gray-800 dark:text-white">
+                            {rating.reviewerName || 'Anonymous'}
+                          </span>
                         </div>
-                        <span className="ml-2 font-medium text-gray-800 dark:text-white">
-                          {rating.reviewerName || 'Anonymous'}
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {rating.createdAt ? new Date(rating.createdAt).toLocaleDateString() : 'Unknown date'}
                         </span>
                       </div>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {rating.createdAt ? new Date(rating.createdAt).toLocaleDateString() : 'Unknown date'}
-                      </span>
+                      <p className="text-gray-600 dark:text-gray-300">{rating.review}</p>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300">{rating.review}</p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
