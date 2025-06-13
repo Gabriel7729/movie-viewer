@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { apiService } from '@/services/api';
+import api from '@/services/api';
 import Button from '@/components/ui/Button';
 
 export default function RegisterPage() {
@@ -40,17 +40,20 @@ export default function RegisterPage() {
     setIsLoading(true);
     
     try {
-      const response = await apiService.register({
+      const response = await api.post('/auth/register', {
         username,
         email,
         password,
       });
       
-      // In a real app, we'd store the token and user info in a context or state management
-      console.log('Registration successful', response);
-      
-      // Redirect to home page
-      router.push('/');
+      // Store the token in local storage
+      if (response.data && response.data.data && response.data.data.token) {
+        localStorage.setItem('token', response.data.data.token);
+        // Redirect to home page
+        router.push('/');
+      } else {
+        setError('Invalid response from server');
+      }
     } catch (error) {
       console.error('Registration error:', error);
       setError('Registration failed. This email may already be registered.');

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { apiService } from '@/services/api';
+import api from '@/services/api';
 import Button from '@/components/ui/Button';
 
 export default function LoginPage() {
@@ -13,24 +13,24 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // Since we're using mock data, you can use this email to login
-  const mockUserEmail = 'moviefan123@example.com';
-  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
     
     try {
-      const response = await apiService.login({ email, password });
+      const response = await api.post('/auth/login', { email, password });
       
-      // In a real app, we'd store the token and user info in a context or state management
-      console.log('Login successful', response);
-      
-      // Redirect to home page
-      router.push('/');
-    } catch (error) {
-      console.error('Login error:', error);
+      // Store the token in local storage
+      if (response.data && response.data.data && response.data.data.token) {
+        localStorage.setItem('token', response.data.data.token);
+        // Redirect to home page
+        router.push('/');
+      } else {
+        setError('Invalid response from server');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
       setError('Invalid email or password');
     } finally {
       setIsLoading(false);
@@ -61,7 +61,6 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={`Try with "${mockUserEmail}"`}
               className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               required
             />
@@ -76,7 +75,6 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Any password will work for the demo"
               className="w-full px-4 py-2 bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-300/70 dark:border-gray-600/70 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               required
             />

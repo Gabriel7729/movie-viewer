@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useInfiniteActors, useActorSearch } from '@/services/hooks';
-import Card, { CardImage, CardContent, CardTitle } from '@/components/ui/Card';
+import Card, { CardContent, CardTitle } from '@/components/ui/Card';
 import SearchInput from '@/components/ui/SearchInput';
 import Button from '@/components/ui/Button';
+import { Actor } from '@/types';
 
 export default function ActorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -13,11 +15,13 @@ export default function ActorsPage() {
   const { data: searchResults } = useActorSearch(searchQuery);
   
   // When searching, display search results, otherwise display infinite scroll data
-  const displayData = searchQuery ? searchResults?.data || [] : data?.flatMap(page => page.data) || [];
+  const displayData = searchQuery 
+    ? searchResults?.data || [] 
+    : data?.flatMap(page => page.data) || [];
   
   // Check if we've loaded all items
   const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
-  const reachedEnd = data && data.some(page => page.data.length < page.limit);
+  const reachedEnd = data && data.some(page => !page.data || page.data.length === 0);
   
   return (
     <div>
@@ -43,14 +47,21 @@ export default function ActorsPage() {
       ) : displayData.length > 0 ? (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {displayData.map((actor) => (
+            {displayData.map((actor: Actor) => (
               <Link href={`/actors/${actor.id}`} key={actor.id}>
                 <Card className="h-full transition-transform hover:scale-105 hover:shadow-lg cursor-pointer">
-                  <CardImage src={actor.photo} alt={actor.name} />
+                  <div className="relative aspect-[3/4]">
+                    <Image 
+                      src={actor.image || 'https://via.placeholder.com/300x400?text=No+Photo'} 
+                      alt={`${actor.firstName} ${actor.lastName}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   <CardContent>
-                    <CardTitle className="text-center">{actor.name}</CardTitle>
+                    <CardTitle className="text-center">{actor.firstName} {actor.lastName}</CardTitle>
                     <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                      {actor.movies.length} {actor.movies.length === 1 ? 'movie' : 'movies'}
+                      {actor.nationality}
                     </p>
                   </CardContent>
                 </Card>

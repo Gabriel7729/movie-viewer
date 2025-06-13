@@ -14,6 +14,22 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'images2.alphacoders.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.themoviedb.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.alphacoders.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'wallpaperaccess.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'via.placeholder.com',
       },
     ],

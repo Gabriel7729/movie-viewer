@@ -7,8 +7,25 @@ import { motion } from 'framer-motion';
 import { slideUp, slideInLeft, slideInRight, staggerContainer } from '@/utils/animation';
 import AnimateElement from '@/components/ui/AnimateElement';
 import ParallaxScroll, { ParallaxSection } from '@/components/animation/ParallaxScroll';
+import { useEffect, useState } from 'react';
+import { Movie } from '@/types';
+import { useMovies } from '@/services/hooks';
 
 export default function Home() {
+  const { data: moviesResponse } = useMovies();
+  const [allMovies, setAllMovies] = useState<Movie[]>([]);
+  
+  useEffect(() => {
+    if (moviesResponse && moviesResponse.data) {
+      setAllMovies(moviesResponse.data);
+    }
+  }, [moviesResponse]);
+  
+  // Get first two movies for the hero section
+  const heroMovies = allMovies.slice(0, 2);
+  
+  // Get the next three movies for the featured section
+  const featuredMovies = allMovies.slice(0, 3);
   
   const titleVariants = {
     hidden: { opacity: 0, y: -20 },
@@ -84,41 +101,85 @@ export default function Home() {
             >
               <div className="relative">
                 <div className="grid grid-cols-2 gap-4">
-                  <ParallaxScroll direction="left" speed={0.2}>
-                    <motion.div 
-                      className="transform -rotate-6"
-                      whileHover={{ scale: 1.05, rotate: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
-                        <Image 
-                          src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg" 
-                          alt="Inception" 
-                          fill
-                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                          className="object-cover"
-                        />
-                      </div>
-                    </motion.div>
-                  </ParallaxScroll>
-                  
-                  <ParallaxScroll direction="right" speed={0.3}>
-                    <motion.div 
-                      className="transform rotate-6 mt-16"
-                      whileHover={{ scale: 1.05, rotate: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
-                        <Image 
-                          src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
-                          alt="The Dark Knight" 
-                          fill
-                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                          className="object-cover"
-                        />
-                      </div>
-                    </motion.div>
-                  </ParallaxScroll>
+                  {heroMovies.length > 0 ? (
+                    <>
+                      <ParallaxScroll direction="left" speed={0.2}>
+                        <motion.div 
+                          className="transform -rotate-6"
+                          whileHover={{ scale: 1.05, rotate: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
+                            <Image 
+                              src={heroMovies[0]?.image || "https://via.placeholder.com/500x750?text=Movie+Poster"} 
+                              alt={heroMovies[0]?.title || "Movie poster"} 
+                              fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                              className="object-cover"
+                            />
+                          </div>
+                        </motion.div>
+                      </ParallaxScroll>
+                      
+                      {heroMovies.length > 1 && (
+                        <ParallaxScroll direction="right" speed={0.3}>
+                          <motion.div 
+                            className="transform rotate-6 mt-16"
+                            whileHover={{ scale: 1.05, rotate: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
+                              <Image 
+                                src={heroMovies[1]?.image || "https://via.placeholder.com/500x750?text=Movie+Poster"} 
+                                alt={heroMovies[1]?.title || "Movie poster"} 
+                                fill
+                                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                className="object-cover"
+                              />
+                            </div>
+                          </motion.div>
+                        </ParallaxScroll>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <ParallaxScroll direction="left" speed={0.2}>
+                        <motion.div 
+                          className="transform -rotate-6"
+                          whileHover={{ scale: 1.05, rotate: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
+                            <Image 
+                              src="https://via.placeholder.com/500x750?text=Loading" 
+                              alt="Loading" 
+                              fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                              className="object-cover"
+                            />
+                          </div>
+                        </motion.div>
+                      </ParallaxScroll>
+                      
+                      <ParallaxScroll direction="right" speed={0.3}>
+                        <motion.div 
+                          className="transform rotate-6 mt-16"
+                          whileHover={{ scale: 1.05, rotate: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="relative w-full aspect-[2/3] rounded-lg shadow-xl overflow-hidden">
+                            <Image 
+                              src="https://via.placeholder.com/500x750?text=Loading" 
+                              alt="Loading" 
+                              fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                              className="object-cover"
+                            />
+                          </div>
+                        </motion.div>
+                      </ParallaxScroll>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -219,131 +280,66 @@ export default function Home() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
           >
-            <AnimateElement delay={0.1}>
-              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                  <div className="relative w-full h-64">
-                    <Image 
-                      src="https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy71SPU58RSJu.jpg" 
-                      alt="Inception" 
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
-                      style={{ transform: 'scale(1.05)' }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <motion.h3 
-                      className="text-xl font-bold text-gray-800 dark:text-white mb-2"
-                      variants={titleVariants}
-                    >
-                      Inception
-                    </motion.h3>
-                    <motion.p 
-                      className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3"
-                      variants={paragraphVariants}
-                    >
-                      A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.
-                    </motion.p>
-                    <motion.div variants={buttonVariants}>
-                      <Link href="/movies/1">
-                        <Button variant="outline" fullWidth>View Details</Button>
-                      </Link>
+            {featuredMovies.length > 0 ? (
+              featuredMovies.map((movie, index) => (
+                <AnimateElement delay={0.1 * (index + 1)} key={movie.id}>
+                  <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
+                    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
+                      <div className="relative w-full h-64">
+                        <Image 
+                          src={movie.image || "https://via.placeholder.com/500x750?text=No+Image"} 
+                          alt={movie.title} 
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover"
+                          style={{ transform: 'scale(1.05)' }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.1)';
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.05)';
+                          }}
+                        />
+                      </div>
+                      <div className="p-4">
+                        <motion.h3 
+                          className="text-xl font-bold text-gray-800 dark:text-white mb-2"
+                          variants={titleVariants}
+                        >
+                          {movie.title}
+                        </motion.h3>
+                        <motion.p 
+                          className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3"
+                          variants={paragraphVariants}
+                        >
+                          {movie.description}
+                        </motion.p>
+                        <motion.div variants={buttonVariants}>
+                          <Link href={`/movies/${movie.id}`}>
+                            <Button variant="outline" fullWidth>View Details</Button>
+                          </Link>
+                        </motion.div>
+                      </div>
                     </motion.div>
                   </div>
-                </motion.div>
-              </div>
-            </AnimateElement>
-            
-            <AnimateElement delay={0.2}>
-              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                  <div className="relative w-full h-64">
-                    <Image 
-                      src="https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" 
-                      alt="The Shawshank Redemption" 
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
-                      style={{ transform: 'scale(1.05)' }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <motion.h3 
-                      className="text-xl font-bold text-gray-800 dark:text-white mb-2"
-                      variants={titleVariants}
-                    >
-                      The Shawshank Redemption
-                    </motion.h3>
-                    <motion.p 
-                      className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3"
-                      variants={paragraphVariants}
-                    >
-                      Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.
-                    </motion.p>
-                    <motion.div variants={buttonVariants}>
-                      <Link href="/movies/2">
-                        <Button variant="outline" fullWidth>View Details</Button>
-                      </Link>
+                </AnimateElement>
+              ))
+            ) : (
+              Array.from({ length: 3 }).map((_, index) => (
+                <AnimateElement delay={0.1 * (index + 1)} key={index}>
+                  <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
+                    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
+                      <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-600 animate-pulse"></div>
+                      <div className="p-4">
+                        <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded animate-pulse mb-2"></div>
+                        <div className="h-16 bg-gray-200 dark:bg-gray-600 rounded animate-pulse mb-4"></div>
+                        <div className="h-10 bg-gray-200 dark:bg-gray-600 rounded animate-pulse"></div>
+                      </div>
                     </motion.div>
                   </div>
-                </motion.div>
-              </div>
-            </AnimateElement>
-            
-            <AnimateElement delay={0.3}>
-              <div className="bg-white/70 dark:bg-gray-700/70 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
-                <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
-                  <div className="relative w-full h-64">
-                    <Image 
-                      src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
-                      alt="The Dark Knight" 
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
-                      style={{ transform: 'scale(1.05)' }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <motion.h3 
-                      className="text-xl font-bold text-gray-800 dark:text-white mb-2"
-                      variants={titleVariants}
-                    >
-                      The Dark Knight
-                    </motion.h3>
-                    <motion.p 
-                      className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3"
-                      variants={paragraphVariants}
-                    >
-                      When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.
-                    </motion.p>
-                    <motion.div variants={buttonVariants}>
-                      <Link href="/movies/3">
-                        <Button variant="outline" fullWidth>View Details</Button>
-                      </Link>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              </div>
-            </AnimateElement>
+                </AnimateElement>
+              ))
+            )}
           </motion.div>
           
           <motion.div 

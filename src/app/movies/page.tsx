@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useInfiniteMovies, useMovieSearch } from '@/services/hooks';
-import Card, { CardImage, CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
+import Card, { CardContent, CardTitle, CardDescription } from '@/components/ui/Card';
 import SearchInput from '@/components/ui/SearchInput';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
+import { Movie } from '@/types';
 
 export default function MoviesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,11 +16,13 @@ export default function MoviesPage() {
   const { data: searchResults } = useMovieSearch(searchQuery);
   
   // When searching, display search results, otherwise display infinite scroll data
-  const displayData = searchQuery ? searchResults?.data || [] : data?.flatMap(page => page.data) || [];
+  const displayData = searchQuery 
+    ? searchResults?.data || [] 
+    : data?.flatMap(page => page.data) || [];
   
   // Check if we've loaded all items
   const isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
-  const reachedEnd = data && data.some(page => page.data.length < page.limit);
+  const reachedEnd = data && data.some(page => !page.data || page.data.length === 0);
   
   return (
     <div>
@@ -44,20 +48,24 @@ export default function MoviesPage() {
       ) : displayData.length > 0 ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {displayData.map((movie) => (
+            {displayData.map((movie: Movie) => (
               <Link href={`/movies/${movie.id}`} key={movie.id}>
                 <Card className="h-full transition-transform hover:scale-105 hover:shadow-lg cursor-pointer">
-                  <CardImage src={movie.poster} alt={movie.title} />
+                  <div className="relative h-64">
+                    <Image 
+                      src={movie.image || 'https://via.placeholder.com/500x750?text=No+Image'} 
+                      alt={movie.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   <CardContent>
                     <CardTitle>{movie.title}</CardTitle>
                     <div className="flex flex-wrap gap-2 mb-2">
-                      {movie.genre.slice(0, 2).map((genre) => (
-                        <Badge key={genre}>{genre}</Badge>
-                      ))}
-                      {movie.genre.length > 2 && <Badge>+{movie.genre.length - 2}</Badge>}
+                      <Badge>{movie.genre}</Badge>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      {movie.releaseYear} • {Math.floor(movie.duration / 60)}h {movie.duration % 60}m
+                      {new Date(movie.releaseDate).getFullYear()} • {Math.floor(movie.duration / 60)}h {movie.duration % 60}m
                     </p>
                     <CardDescription className="line-clamp-2">{movie.description}</CardDescription>
                   </CardContent>

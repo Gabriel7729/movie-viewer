@@ -1,42 +1,80 @@
 // Types for Movie Viewer application
 
+// Base response type from backend
+export interface BaseResponseDto<T> {
+  data: T;
+  message?: string;
+  statusCode?: number;
+}
+
+// Movie related types
 export interface Movie {
   id: number;
   title: string;
   description: string;
-  releaseYear: number;
-  poster: string;
-  genre: string[];
-  duration: number; // in minutes
-  actors: number[]; // actor IDs
-  ratings: Rating[];
+  releaseDate: string;
+  genre: string;
+  duration: number;
+  director: string;
+  image?: string;
+  actors?: Actor[];
+  ratings?: Rating[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
+export interface CreateMovieDto {
+  title: string;
+  description: string;
+  releaseDate: string;
+  genre: string;
+  duration: number;
+  director: string;
+  image?: string;
+}
+
+export interface UpdateMovieDto {
+  title?: string;
+  description?: string;
+  releaseDate?: string;
+  genre?: string;
+  duration?: number;
+  director?: string;
+  image?: string;
+}
+
+// Actor related types
 export interface Actor {
   id: number;
-  name: string;
-  bio: string;
-  photo: string;
+  firstName: string;
+  lastName: string;
   birthDate: string;
-  movies: number[]; // movie IDs
+  nationality: string;
+  image?: string;
+  movies?: Movie[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
+// Rating related types
 export interface Rating {
   id: number;
+  rating: number;
+  review?: string;
+  reviewerName?: string;
   movieId: number;
-  userId: number;
-  value: number; // 1-5
-  comment: string;
-  date: string;
+  movie?: Movie;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
+// Authentication types
 export interface User {
   id: number;
   username: string;
   email: string;
 }
 
-// Authentication types
 export interface AuthState {
   user: User | null;
   token: string | null;
